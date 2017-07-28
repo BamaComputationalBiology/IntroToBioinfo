@@ -1,0 +1,95 @@
+```{r global_options, include=FALSE}
+library(knitr)
+opts_chunk$set(fig.align="center", fig.height=4, fig.width=4)
+```
+##Session 1- What is bioinformatics? Exercise: Life in the shell
+
+Bioinformatics often involves dealing with large amounts of data, and biologists have found that the most efficient way to deal with "big data" is in the Unix shell. Unix is an operating system that can run on your computer (if you have a Mac, it is already running) and the "shell" is a program that allows you to interact with elements of the operating system, for example files. You operate the shell through the terminal or command line, and getting comfortable with it will be our first task.
+
+Task 1: Open your terminal
+
+Your computer is organized into hierarchical directories, and navigating those directories is our first goal. Each directory has a **path**, and paths can be absolute or relative. 
+
+Once you have your terminal open, you should see a prompt ($). For the rest of the class, the $ prompt means I am in the terminal. Type the text that follows to see what the UNIX command does. For example, to see what directory you are currently in type 
+
+$ pwd
+
+Most UNIX commands have a meaningful name, and learning the meaning helps me to remember it. For example, pwd = "print working directory." I'm asking the computer to tell me which directory I'm working in. The first thing to know is that everything in the shell is a program. When I type "pwd" I'm calling a program that tells UNIX to tell me which directory I'm working in.
+
+Why do we type "pwd" instead of "print working directory?" *It is a whole lot shorter.* When you spend your entire day working on the computer, you need to find efficiency. Also, **spaces do not work in the shell.** Memorize this, take it to heart, remember every time you do anything on the computer. Putting spaces in your filenames will only cause pain and suffering later.
+
+The system will give me the **absolute** path. That means it is the entire path, from the base directory (which is specified by / on a Mac). The forward slashes separate directory levels. Another handy location specifier is ~, which means "home." Every user's home will be different on a given UNIX system.
+
+In order to navigate we're going to use another command
+
+$ mkdir that_directory
+
+mkdir = "make directory"
+
+To see what is inside the directory type
+
+$ ls
+
+Or "list." Now you should see your newly created directory.
+
+The relative path is **relative** to the directory you are in, and it is specified as "." So if you want to type a path relative to your location, you would type 
+
+$ ./that_directory/
+
+In order to navigate into it, type
+
+$ cd that_directory
+
+cd = "change directory." Type 
+
+$ pwd
+
+to see where you are. To navigate backwards, type
+
+$ cd ..
+
+Try typing
+
+$ cd ./that_directory
+
+and then
+
+$ cd /that_directory
+
+instead. Then try "pwd" again. Where are you? Does the forward slash matter?
+
+Navigate back to your home directory. Remember you can do this in a number of ways, including:
+
+$ cd ~
+
+Now type
+
+$ rmdir ./that_directory
+
+$ ls
+
+What happens?
+
+In order to learn more about a command, we can use man = "manual". For example, type
+
+$ man ls
+
+It should give you a number of options. You call these like so:
+
+$ ls -a
+
+And now you can see "all" files, including hidden or "dot" files. These are called dot files because their name begins with a dot. They are not typically shown and are usually configuration files for different programs. 
+
+It seems simple but you have mastered UNIX navigation!
+
+Spend some time navigating around your computer and understanding the directory structure.
+
+Homework:
+
+1) List the commands you have learned and give a short (1-5 word description) of what each does.
+
+2) List two handy options that go with each command.
+
+
+
+
