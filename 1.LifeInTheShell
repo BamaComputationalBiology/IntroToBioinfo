@@ -1,8 +1,4 @@
-```{r global_options, include=FALSE}
-library(knitr)
-opts_chunk$set(fig.align="center", fig.height=4, fig.width=4)
-```
-##Session 1- What is bioinformatics? Exercise: Life in the shell
+Session 1- What is bioinformatics? Exercise: Life in the shell
 
 Bioinformatics often involves dealing with large amounts of data, and biologists have found that the most efficient way to deal with "big data" is in the Unix shell. Unix is an operating system that can run on your computer (if you have a Mac, it is already running) and the "shell" is a program that allows you to interact with elements of the operating system, for example files. You operate the shell through the terminal or command line, and getting comfortable with it will be our first task.
 
