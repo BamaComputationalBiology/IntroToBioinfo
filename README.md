@@ -8,9 +8,9 @@ Contents
 
 2. Alabama Super Computer (ASC) orientation
 
-3. Alabama Super Computer orientation Part 2
+3. Working with files
 
-4. Working with files
+4. Alabama Super Computer orientation Part 2
 
 5. BLAST on ASC
 
