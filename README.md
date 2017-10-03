@@ -10,7 +10,7 @@ Contents
 
 3. Working with files
 
-4. Alabama Super Computer orientation Part 2
+4. Alabama Super Computer orientation Part 2 - ASC Script Submission
 
 5. BLAST on ASC
 
