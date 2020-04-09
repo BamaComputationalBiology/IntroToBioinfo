@@ -1,0 +1,202 @@
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("DESeq2")
+
+install.packages("RColorBrewer")
+
+install.packages("ggplot2")
+
+library(RColorBrewer)
+
+library(DESeq2)
+
+library(ggplot2)
+
+#The first step in analysis is to construct a DESeqDataSet object from our text files.
+
+directory<-"." # Setting our working directory
+
+# If you go to the 'Files' tab in the lower right hand pane (with Files, Plots, Packages, etc) there is a button called 'Upload'
+# Use this to get your gene expression counts (all the .txt files)
+
+sampleFiles <- grep("treated",list.files(directory),value=TRUE) 
+
+# Here ‘grep’ is functioning like it does in the bash shell and looking for the word ‘treated’ in file names.
+
+sampleCondition<-c("old_treated","old_treated","old_treated","young_treated","young_treated","young_treated")
+
+# Making a table to tell DESeq2 what are samples are (3 replicates of each type)
+
+sampleTable<-data.frame(sampleName=sampleFiles, fileName=sampleFiles, condition=sampleCondition)
+
+# Making a table to tell DESEq2 about our whole dataset
+
+ddsHTSeq<-DESeqDataSetFromHTSeqCount(sampleTable=sampleTable, directory=directory, design=~condition)
+
+# Creating a DESeq2 object from our data 
+
+colData(ddsHTSeq)$condition<-factor(colData(ddsHTSeq)$condition, levels=c("old_treated","young_treated"))
+
+# Creating column labels for our dataset
+
+
+
+# Remove zeros
+
+ddsHTSeq <- ddsHTSeq[ rowSums(counts(ddsHTSeq)) > 1, ]
+
+#Perform DESeq estimation
+
+dds<-DESeq(ddsHTSeq)
+
+# Place results in an R object
+
+res<-results(dds)
+
+res<-res[order(res$padj),]
+
+head(res)
+
+#Look at your results
+
+res
+
+#For each gene you should have a mean expression (baseMean), the expression change (log2FoldChange) in the treated samples, 
+
+# the standard error of this change (lfcSE), the test statistic (stat) and the estimate of significance (pvalue). 
+
+#Since we are doing so many individual tests we need to adjust the p-value for multiple testing, hence the last padj columns.
+
+
+
+# Our data are currently integers that are raw counts of transcripts for each gene. 
+
+# Raw transcript counts are difficult to work with because it is difficult to understand 4 transcripts vs. 13 transcripts 
+
+# without some sense of scale. In order to introduce a scale we need to transform our data to log-fold changes. 
+
+# Then we can understand a doubling in expression (2-fold change) or a tripling in expression (3-fold change). 
+
+# DESeq2 does this transformation in its calculations and gives you the expression change as that log fold change (log2FoldChange).
+
+
+
+# Check for outliers
+
+boxplot(log10(assays(dds)[["cooks"]]), range=0, las=2)
+
+# Your boxplot should pop up in your "Plots" window
+
+# Each box is one of your samples and the data are expression levels across all genes
+
+
+
+#Order your results by p-value
+
+resOrdered <- res[order(res$padj),]
+
+summary(resOrdered)
+
+head(resOrdered)
+
+#This should show you the most highly differentially expressed genes. Note that expression differences can be 
+
+# upregulation or downregulation.
+
+
+
+
+# We go into these analyses assuming that some of our results will appear significant by chance alone. 
+
+# This is the ‘false discovery rate’ or FDR. For example, an FDR of 0.1 means we assume that ~10% of our 
+
+# ‘significantly differentially expressed genes’ are changing by chance alone.
+
+# The test is reporting the genes with a log fold change (LFC) that is significant at an adjusted p-value of 0.1. 
+
+# Examine how your alpha value (FDR) affects the number of significantly differentially expressed genes by 
+
+# manipulating the alpha value (Look at the number of rows in the DataFrame).
+
+sum(res$padj < 0.1, na.rm=TRUE)
+
+res05 <- results(dds,alpha=0.05)
+
+summary(res05)
+
+res01 <- results(dds,alpha=0.01)
+
+summary(res01)
+
+# Get more information about your columns
+
+mcols(res)$description
+
+# Plot expression by fold up- and down- regulation
+
+plotMA(res,main="DESeq2",ylim=c(-2,2))
+
+#The red genes are significantly differentially expressed, the black ones are not.
+
+# Now, look at expression for a single gene (here, the one with the smallest p-value)
+
+plotCounts(dds,gene=which.min(res$padj), intgroup="condition")
+
+# This is the expression for the gene with the largest (i.e., least significant) p-value
+
+plotCounts(dds,gene=which.max(res$padj), intgroup="condition")
+
+# Make it a ggplot
+
+d <- plotCounts(dds, gene=which.min(res$padj),intgroup="condition",returnData=TRUE)
+
+ggplot(d,aes(x=condition,y=count)) + geom_point(position=position_jitter(w=0.1,h=0)) + scale_y_log10(breaks=c(25,100,400))
+
+# Look at the significant genes
+
+resSig <- subset(resOrdered,padj<0.1)
+
+# Write your results to a comma-separated file (this file can be opened in Excel)
+
+write.csv(as.data.frame(resSig),file="DESeq2_results.csv")
+
+# The final part is to copy your list of significantly differentially expressed genes to DAVID, the online functional database. DAVID
+
+# will tell you about any functions that are overrepresented in your gene set. Spend some time exploring the different outputs from DAVID
+
+# The final frontier: Biological function
+
+# Now that you have two lists of significantly differentially expressed genes we need to assign biological function to these genes. 
+
+# Take the top 20 differentially expressed genes from each comparison and: 
+
+# Step 1) paste the list of gene names into the DAVID functional annotation tool (https://david.ncifcrf.gov/summary.jsp) 
+
+# Step 2) Select Identifier (Flybase_gene_ID) 
+
+# Step 3) List Type (Gene List) 
+
+# Step 4) Submit List. Go to the bottom of the new page and hit “Functional Annotation Clustering.” 
+
+# You should see several clusters of biological function. 
+
+# These are calculated relative to the entire D. melanogaster gene complement and you will have both an 
+
+# enrichment score and a p-value. Spend some time exploring the biological functions that DAVID is assigning to your results.
+
+# Compare the functional annotations between differentially expressed genes. 
+
+# Use David to examine the functional annotations for the top 20 differentially expressed genes in each comparison.
+
+# Your homework is to prepare a report that summarizes your results (a plot is worth 1000 words!) 
+
+# and addresses the following questions:
+  
+# 1. What patterns do you see?
+
+# 2. Which types of biological function are enriched in these comparisons- i.e., what kinds of genes are up-regulated or down-regulated in your samples?
+
+# 3. Are the same genes up- and down-regulated in the young and old flies in response to infection?
+
+# 4.  Do you think these results are biologically relevant? Why or why not?
