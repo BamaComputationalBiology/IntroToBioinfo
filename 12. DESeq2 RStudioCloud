@@ -18,7 +18,10 @@ library(ggplot2)
 directory<-"." # Setting our working directory
 
 # If you go to the 'Files' tab in the lower right hand pane (with Files, Plots, Packages, etc) there is a button called 'Upload'
+
 # Use this to get your gene expression counts (all the .txt files)
+
+# Example here https://community.rstudio.com/t/importing-data-into-r-studio-cloud/14332/5 
 
 sampleFiles <- grep("treated",list.files(directory),value=TRUE) 
 
