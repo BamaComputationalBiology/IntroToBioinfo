@@ -144,15 +144,15 @@ plotMA(res,main="DESeq2",ylim=c(-2,2))
 
 # Now, look at expression for a single gene (here, the one with the smallest p-value)
 
-plotCounts(dds,gene=which.min(res$padj), intgroup="condition")
+plotCounts(dds,gene=which.min(res01$padj), intgroup="condition")
 
 # This is the expression for the gene with the largest (i.e., least significant) p-value
 
-plotCounts(dds,gene=which.max(res$padj), intgroup="condition")
+plotCounts(dds,gene=which.max(res01$padj), intgroup="condition")
 
 # Make it a ggplot
 
-d <- plotCounts(dds, gene=which.min(res$padj),intgroup="condition",returnData=TRUE)
+d <- plotCounts(dds, gene=which.min(res01$padj),intgroup="condition",returnData=TRUE)
 
 ggplot(d,aes(x=condition,y=count)) + geom_point(position=position_jitter(w=0.1,h=0)) + scale_y_log10(breaks=c(25,100,400))
 
