@@ -97,12 +97,16 @@ Hit 'escape' and ':wq' to save and exit.
 
 SPAdes is a more sophisticated program and does not require user-inputted parameters.
 
+# End tutorial here.
+
+You can use the online QUAST portal http://cab.cc.spbu.ru/quast/ to evaluate your assembly (contigs.fasta file).
+
 Your homework is to answer these specific questions:
 
 1.	What is your organism?
 2.	What kind of DNA did you assemble? 
 3.	What are the final statistics for your SPAdes assembly (Total size, N50, number of scaffolds)?
-
+4.  Is this a 'good' assembly? How could your assembly be improved?
 
 
 
